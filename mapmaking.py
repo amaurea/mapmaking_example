@@ -42,6 +42,9 @@ class Data:
 		self.noise_spec = noise_spec
 
 def solve_plain(dataset, shape):
+	"""Solve the simplified mapmaking equation Ax=b,
+	where A = P'P and b = P'd, e.g. ignoring noise
+	properties such as correlations."""
 	rhs  = np.zeros(shape)
 	hits = np.zeros(shape)
 	for data in dataset:
@@ -58,6 +61,8 @@ def solve_full(dataset, shape, niter=100, verbose=True):
 	# to a vector x. We will then use Conjugate Gradients
 	# to invert it.
 	def A(x):
+		# x is 1d because the conjugate gradient solver works
+		# on 1d arrays. So start by expanding it to 2d.
 		x   = x.reshape(shape)
 		res = x*0
 		for data in dataset:
